@@ -1,0 +1,37 @@
+{
+  "name": "api-client",
+  "version": "1.0.0",
+  "description": "HTTP Client Library with builder pattern and interception support.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "ts-node ./src/index.ts",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xbvarlik/api-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xbvarlik/api-client/issues"
+  },
+  "homepage": "https://github.com/xbvarlik/api-client#readme",
+  "keywords": [
+    "HTTP",
+    "Client",
+    "API",
+    "Api-Client",
+    "TypeScript"
+  ],
+  "author": "Barış Varlık",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
