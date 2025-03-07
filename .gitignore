@@ -33,4 +33,7 @@ coverage/
 
 # Logs
 logs
-*.log 
+*.log
+
+# npm package files
+*.tgz 
