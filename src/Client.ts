@@ -52,7 +52,9 @@ export class ApiClient {
     options: RequestInit,
     params?: Record<string, any>,
     requestInterceptors: RequestInterceptor[] = [],
-    responseInterceptors: ResponseInterceptor[] = []
+    responseInterceptors: ResponseInterceptor[] = [],
+    retryCount: number = 0,
+    maxRetries: number = 3
   ): Promise<T> {
     // Fix URL construction
     let url = this.baseUrl;
@@ -83,10 +85,33 @@ export class ApiClient {
     
     // Make the request
     let response = await fetch(url, interceptedOptions);
+    let shouldRetry = false;
 
     // Apply response interceptors
     for (const interceptor of [...this.responseInterceptors, ...responseInterceptors]) {
       response = await interceptor.intercept(response);
+      // Check if the interceptor has set a retry flag
+      if ('shouldRetry' in interceptor && interceptor.shouldRetry === true) {
+        shouldRetry = true;
+      }
+    }
+
+    // Handle retry logic
+    if (shouldRetry && retryCount < maxRetries) {
+      // Add exponential backoff delay
+      const delay = Math.min(1000 * Math.pow(2, retryCount), 10000);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      
+      // Retry the request
+      return this.executeRequest(
+        endpoint,
+        options,
+        params,
+        requestInterceptors,
+        responseInterceptors,
+        retryCount + 1,
+        maxRetries
+      );
     }
     
     // Process the response
