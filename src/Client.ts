@@ -77,8 +77,17 @@ export class ApiClient {
       }
     }
     
+    // Merge default headers with request options
+    const mergedOptions = {
+      ...options,
+      headers: {
+        ...this.defaultHeaders,
+        ...(options.headers || {})
+      }
+    };
+    
     // Apply request interceptors
-    let interceptedOptions = { ...options };
+    let interceptedOptions = { ...mergedOptions } as any;
     for (const interceptor of [...this.requestInterceptors, ...requestInterceptors]) {
       interceptedOptions = interceptor.intercept(interceptedOptions, url);
     }
